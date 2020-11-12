@@ -1,12 +1,12 @@
 const { connect, Account, keyStores: { InMemoryKeyStore } } = require('near-api-js');
 
-async function viewPixelBoard() {
+async function viewPixelBoard(blockId) {
     const config = require('./config')(process.env.NODE_ENV || 'development')
     // TODO: Why no default keyStore?
     const keyStore = new InMemoryKeyStore();
     const near = await connect({...config, keyStore});
     const account = await near.account('berryclub.ek.near');
-    const pixelsState = await account.viewState('p', { blockId: 22257601 });
+    const pixelsState = await account.viewState('p', blockId ? { blockId: parseInt(blockId) } : null);
     const lines = pixelsState.map(({key, value}) => {        
         const linePixels = value.slice(4);
         const width = linePixels.length / 8;
@@ -35,9 +35,17 @@ async function viewPixelBoard() {
 const Koa = require('koa');
 const app = new Koa();
 
-app.use(async ctx => {
+const Router = require('koa-router');
+const router = new Router();
+
+
+router.get('/:blockId?', async ctx => {
     ctx.type = "image/png";
-    ctx.body = await viewPixelBoard();
+    ctx.body = await viewPixelBoard(ctx.params.blockId);
 });
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods());
 
 app.listen(3000);
