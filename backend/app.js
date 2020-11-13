@@ -6,7 +6,10 @@ async function viewPixelBoard(blockId) {
     const keyStore = new InMemoryKeyStore();
     const near = await connect({...config, keyStore});
     const account = await near.account('berryclub.ek.near');
-    const pixelsState = await account.viewState('p', blockId ? { blockId: parseInt(blockId) } : null);
+    if (blockId && /^\d+$/.exec(blockId)) {
+        blockId = parseInt(blockId, 10);
+    }
+    const pixelsState = await account.viewState('p', blockId ? { blockId } : null);
     const lines = pixelsState.map(({key, value}) => {        
         const linePixels = value.slice(4);
         const width = linePixels.length / 8;
