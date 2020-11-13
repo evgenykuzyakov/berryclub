@@ -8,5 +8,8 @@
     "koa": "^2.13.0",
     "koa-router": "^10.0.0",
     "near-api-js": "^0.32.0"
+  },
+  "scripts": {
+    "start": "node app"
   }
 }
