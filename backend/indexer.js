@@ -15,6 +15,8 @@ async function getPgClient() {
 }
 
 async function findEdits(accountId) {
+    console.log('findEdits', accountId);
+
     const client = await getPgClient();
     const { rows } = await client.query(`
         SELECT block_timestamp, block_hash FROM receipts
@@ -23,6 +25,9 @@ async function findEdits(accountId) {
         ORDER BY random()
         LIMIT 50
         `, [accountId]);
+
+    console.log(`Found ${rows.length} rows`);
+
     if (rows.length === 0) {
         return null;
     }

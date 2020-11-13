@@ -43,12 +43,16 @@ const router = new Router();
 
 
 router.get('/img/:blockId?', async ctx => {
+    console.log(ctx.path);
+
     ctx.type = "image/png";
     ctx.body = await viewPixelBoard(ctx.params.blockId);
 });
 
 const indexer = require('./indexer');
 router.get('/', async ctx => {
+    console.log(ctx.path);
+
     const edits = await indexer.findEdits('vlad.near');
     edits.sort((a, b) => parseFloat(a.block_timestamp) - parseFloat(b.block_timestamp));
 
