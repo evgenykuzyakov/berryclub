@@ -7,7 +7,7 @@
     "canvas": "^2.6.1",
     "koa": "^2.13.0",
     "koa-router": "^10.0.0",
-    "near-api-js": "^0.32.0"
+    "near-api-js": "https://github.com/near/near-api-js.git#view-state"
   },
   "scripts": {
     "start": "node app"
