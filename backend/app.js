@@ -42,9 +42,24 @@ const Router = require('koa-router');
 const router = new Router();
 
 
-router.get('/:blockId?', async ctx => {
+router.get('/img/:blockId?', async ctx => {
     ctx.type = "image/png";
     ctx.body = await viewPixelBoard(ctx.params.blockId);
+});
+
+const indexer = require('./indexer');
+router.get('/', async ctx => {
+    const edits = await indexer.findEdits('vlad.near');
+    edits.sort((a, b) => parseFloat(a.block_timestamp) - parseFloat(b.block_timestamp));
+
+    ctx.type = 'text/html';
+    ctx.body = `
+        <p>Welcome to 🥑 club time machine.
+
+        ${
+            edits.map(({ block_hash }) => `<p><img style="image-rendering: pixelated;" src="/img/${block_hash}" width="500">`).join('\n')
+        }
+    `;
 });
 
 app
