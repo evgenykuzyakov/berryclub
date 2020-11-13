@@ -61,7 +61,7 @@ router.get('/:accountId?', async ctx => {
         <p>Welcome to 🥑 club time machine.
 
         ${
-            edits.map(({ block_hash }) => `<p><img style="image-rendering: pixelated;" src="/img/${block_hash}" width="500">`).join('\n')
+            edits.map(({ block_hash }) => `<p><img style="image-rendering: pixelated; image-rendering: crisp-edges;" src="/img/${block_hash}" width="500">`).join('\n')
         }
     `;
 });
