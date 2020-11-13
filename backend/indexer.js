@@ -21,16 +21,12 @@ async function findEdits(accountId) {
     const { rows } = await client.query(`
         SELECT block_timestamp, block_hash FROM receipts
         WHERE receiver_id = 'berryclub.ek.near'
-            AND predecessor_id = $1
+            ${accountId ? `AND predecessor_id = $1` : ''}
         ORDER BY random()
         LIMIT 50
-        `, [accountId]);
+        `, accountId ? [accountId] : []);
 
     console.log(`Found ${rows.length} rows`);
-
-    if (rows.length === 0) {
-        return null;
-    }
 
     return rows;
 }

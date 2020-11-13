@@ -50,10 +50,10 @@ router.get('/img/:blockId?', async ctx => {
 });
 
 const indexer = require('./indexer');
-router.get('/', async ctx => {
+router.get('/:accountId?', async ctx => {
     console.log(ctx.path);
 
-    const edits = await indexer.findEdits('vlad.near');
+    const edits = await indexer.findEdits(ctx.params.accountId);
     edits.sort((a, b) => parseFloat(a.block_timestamp) - parseFloat(b.block_timestamp));
 
     ctx.type = 'text/html';
