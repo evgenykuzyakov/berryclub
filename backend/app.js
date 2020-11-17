@@ -1,4 +1,4 @@
-const { connect, Account, keyStores: { InMemoryKeyStore } } = require('near-api-js');
+const { connect, keyStores: { InMemoryKeyStore } } = require('near-api-js');
 
 async function viewPixelBoard(blockId) {
     const config = require('./config')(process.env.NODE_ENV || 'development')
