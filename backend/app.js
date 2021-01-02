@@ -22,12 +22,13 @@ async function viewPixelBoard(blockId) {
 
 
     const { createCanvas } = require('canvas');
-    const canvas = createCanvas(50, 50);
+    const scale = 8;
+    const canvas = createCanvas(50 * scale, 50 * scale);
     const ctx = canvas.getContext('2d');
     lines.forEach((line, y) => {
         line.forEach((color, x) => {
             ctx.fillStyle = `#${color}`;
-            ctx.fillRect(x, y, 1, 1);
+            ctx.fillRect(x * scale, y * scale, scale, scale);
         });
     });
 
