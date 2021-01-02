@@ -53,15 +53,36 @@ const indexer = require('./indexer');
 router.get('/:accountId?', async ctx => {
     console.log(ctx.path);
 
-    const edits = await indexer.findEdits(ctx.params.accountId);
+    const { accountId } = ctx.params;
+
+    const edits = await indexer.findEdits(accountId);
     edits.sort((a, b) => parseFloat(a.block_timestamp) - parseFloat(b.block_timestamp));
 
     ctx.type = 'text/html';
     ctx.body = `
-        <p>Welcome to 🥑 club time machine.
+        <style>
+            p, img {
+                max-width: 90vh;
+                margin: 0.5em auto;
+            }
+            img {
+                width: 100%;
+                display: block;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+        </style>
+        <p>Welcome to <a href="https://berryclub.io">🥑 club</a> time machine.
 
         ${
-            edits.map(({ block_hash }) => `<p><img style="image-rendering: pixelated; image-rendering: crisp-edges;" src="/img/${block_hash}" width="500">`).join('\n')
+            accountId
+                ? `You are viewing sample of pictures where <a href="https://explorer.near.org/accounts/${accountId}">${accountId}</a> has contributed.` 
+                : `You are viewing sample of pictures made by Berry Club users.`
+        }
+        <p>Refresh your browser to see a different sample.
+
+        ${
+            edits.map(({ block_hash }) => `<p><img src="/img/${block_hash}" width="500">`).join('\n')
         }
     `;
 });
