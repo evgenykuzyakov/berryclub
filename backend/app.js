@@ -70,4 +70,6 @@ app
     .use(router.routes())
     .use(router.allowedMethods());
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT);
+console.log('Listening on http://localhost:%d/', PORT);
