@@ -19,7 +19,8 @@ async function findEdits(accountId) {
 
     const client = await getPgClient();
     const { rows } = await client.query(`
-        SELECT included_in_block_timestamp AS block_timestamp, included_in_block_hash AS block_hash FROM receipts
+        SELECT included_in_block_timestamp AS block_timestamp, included_in_block_hash AS block_hash
+        FROM receipts ${accountId ? '' : `TABLESAMPLE SYSTEM(0.05)`}
         WHERE receiver_account_id = 'berryclub.ek.near'
             ${accountId ? `AND predecessor_account_id = $1` : ''}
         ORDER BY random()
