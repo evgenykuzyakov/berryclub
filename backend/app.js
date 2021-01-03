@@ -87,7 +87,7 @@ router.get('/board/:blockId?', async ctx => {
         </style>
 
         <link rel="alternate" type="application/json+oembed"
-  href="${ctx.protocol}://${ctx.host}/oembed?url=${encodeURIComponent(`${ctx.protocol}://${ctx.host}${ctx.url}`)}&format=json"
+  href="${SERVER_URL}/oembed?url=${encodeURIComponent(`${SERVER_URL}${ctx.url}`)}&format=json"
   title="Berry Club Snapshot" />
 
         <p>Made in <a href="https://berryclub.io">🥑 club</a>.
