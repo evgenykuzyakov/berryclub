@@ -10,7 +10,7 @@ async function viewPixelBoard(blockId) {
         blockId = parseInt(blockId, 10);
     }
     const pixelsState = await account.viewState('p', blockId ? { blockId } : null);
-    const lines = pixelsState.map(({key, value}) => {        
+    const lines = pixelsState.map(({key, value}) => {
         const linePixels = value.slice(4);
         const width = linePixels.length / 8;
         const lineColors = [];
@@ -42,12 +42,58 @@ const app = new Koa();
 const Router = require('koa-router');
 const router = new Router();
 
+const SERVER_URL = 'https://wayback.berryclub.io';
 
 router.get('/img/:blockId?', async ctx => {
     console.log(ctx.path);
 
     ctx.type = "image/png";
     ctx.body = await viewPixelBoard(ctx.params.blockId);
+});
+
+const oembed = require('koa-oembed');
+router.get('/oembed', oembed(`${SERVER_URL}/board/*`), function (ctx) {
+    console.log('hmmmmmmmmm');
+    const photoId = ctx.oembed.match[1] // regex match of first wildcard.
+    // match[0] is the fully matched url; 1, 2, 3... store wildcard matches
+
+    // TODO: Some generic validation
+    // if (!checkIfExists(photoId)) {
+    //     ctx.throw(404)
+    // }
+
+    ctx.oembed.photo({
+        url: `https://wayback.berryclub.io/img/${photoId}`,
+        width: 400,
+        height: 400
+    })
+})
+
+router.get('/board/:blockId?', async ctx => {
+    const { blockId } = ctx.params;
+    ctx.type = 'text/html';
+    ctx.body = `
+        <style>
+            p, img {
+                max-width: 90vh;
+                margin: 0.5em auto;
+            }
+            img {
+                width: 100%;
+                display: block;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+        </style>
+
+        <link rel="alternate" type="application/json+oembed"
+  href="${ctx.protocol}://${ctx.host}/oembed?url=${encodeURIComponent(`${ctx.protocol}://${ctx.host}${ctx.url}`)}&format=json"
+  title="Berry Club Snapshot" />
+
+        <p>Made in <a href="https://berryclub.io">🥑 club</a>.
+
+        <p><img src="/img/${blockId}">
+    `;
 });
 
 const indexer = require('./indexer');
