@@ -99,6 +99,16 @@ router.get('/board/:blockId?', async ctx => {
 
 router.get('/rate/:blockId1/vs/:blockId2', async ctx => {
     const { blockId1, blockId2 } = ctx.params;
+
+    const board = blockId => `
+        <div class="board">
+            <img src="/img/${blockId}">
+            <form method="POST">
+                <button value="${blockId}">This 🍅 is juicier</button>
+            </form>
+        </div>
+    `;
+
     ctx.type = 'text/html';
     ctx.body = `
         ${commonStyles}
@@ -113,19 +123,15 @@ router.get('/rate/:blockId1/vs/:blockId2', async ctx => {
             }
 
             .board {
-                padding: 1em;
+                padding: 0.5em;
             }
         </style>
 
-        <p>Which NFT has jucier berries?</p>
+        <p>Which 🍅 is juicier?</p>
 
         <div class="container">
-            <div class="board">
-                <img src="/img/${blockId1}">
-            </div>
-            <div class="board">
-                <img src="/img/${blockId2}">
-            </div>
+            ${board(blockId1)}
+            ${board(blockId2)}
         </div>
     `;
 });
