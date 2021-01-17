@@ -45,15 +45,12 @@ const router = new Router();
 const SERVER_URL = 'https://wayback.berryclub.io';
 
 router.get('/img/:blockId?', async ctx => {
-    console.log(ctx.path);
-
     ctx.type = "image/png";
     ctx.body = await viewPixelBoard(ctx.params.blockId);
 });
 
 const oembed = require('koa-oembed');
 router.get('/oembed', oembed(`${SERVER_URL}/board/*`), function (ctx) {
-    console.log('hmmmmmmmmm');
     const photoId = ctx.oembed.match[1] // regex match of first wildcard.
     // match[0] is the fully matched url; 1, 2, 3... store wildcard matches
 
@@ -98,8 +95,6 @@ router.get('/board/:blockId?', async ctx => {
 
 const indexer = require('./indexer');
 router.get('/:accountId?', async ctx => {
-    console.log(ctx.path);
-
     const { accountId } = ctx.params;
 
     const edits = await indexer.findEdits(accountId);
@@ -135,6 +130,10 @@ router.get('/:accountId?', async ctx => {
 });
 
 app
+    .use(async (ctx, next) => {
+        console.log(ctx.method, ctx.path);
+        await next();
+    })
     .use(router.routes())
     .use(router.allowedMethods());
 
