@@ -66,22 +66,26 @@ router.get('/oembed', oembed(`${SERVER_URL}/board/*`), function (ctx) {
     })
 })
 
+const commonStyles = `
+    <style>
+        p, img {
+            max-width: 90vh;
+            margin: 0.5em auto;
+        }
+        img {
+            width: 100%;
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+`;
+
 router.get('/board/:blockId?', async ctx => {
     const { blockId } = ctx.params;
     ctx.type = 'text/html';
     ctx.body = `
-        <style>
-            p, img {
-                max-width: 90vh;
-                margin: 0.5em auto;
-            }
-            img {
-                width: 100%;
-                display: block;
-                image-rendering: pixelated;
-                image-rendering: crisp-edges;
-            }
-        </style>
+        ${commonStyles}
 
         <link rel="alternate" type="application/json+oembed"
   href="${SERVER_URL}/oembed?url=${encodeURIComponent(`${SERVER_URL}${ctx.url}`)}&format=json"
@@ -102,18 +106,8 @@ router.get('/:accountId?', async ctx => {
 
     ctx.type = 'text/html';
     ctx.body = `
-        <style>
-            p, img {
-                max-width: 90vh;
-                margin: 0.5em auto;
-            }
-            img {
-                width: 100%;
-                display: block;
-                image-rendering: pixelated;
-                image-rendering: crisp-edges;
-            }
-        </style>
+        ${commonStyles}
+
         <p>Welcome to <a href="https://berryclub.io">🥑 club</a> time machine.
 
         ${
