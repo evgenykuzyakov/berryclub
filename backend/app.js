@@ -97,6 +97,39 @@ router.get('/board/:blockId?', async ctx => {
     `;
 });
 
+router.get('/rate/:blockId1/vs/:blockId2', async ctx => {
+    const { blockId1, blockId2 } = ctx.params;
+    ctx.type = 'text/html';
+    ctx.body = `
+        ${commonStyles}
+        <style>
+            img {
+                width: 50vh;
+            }
+
+            .container {
+                display: flex;
+                justify-content: center;
+            }
+
+            .board {
+                padding: 1em;
+            }
+        </style>
+
+        <p>Which NFT has jucier berries?</p>
+
+        <div class="container">
+            <div class="board">
+                <img src="/img/${blockId1}">
+            </div>
+            <div class="board">
+                <img src="/img/${blockId2}">
+            </div>
+        </div>
+    `;
+});
+
 const indexer = require('./indexer');
 router.get('/:accountId?', async ctx => {
     const { accountId } = ctx.params;
